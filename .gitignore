@@ -3,6 +3,8 @@ node_modules
 dist
 .npmrc
 .cache
+.history
+dist_electron
 
 tests/server/static
 tests/server/static/upload

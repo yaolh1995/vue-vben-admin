@@ -1,6 +1,27 @@
 {
   "name": "vben-admin",
   "version": "2.8.0",
+  "main": "electron/index.js",
+  "build": {
+    "appId": "com.my-website.my-app",
+    "productName": "MyApp",
+    "copyright": "Copyright © 2019 ${author}",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist_electron"
+    }
+  },
   "author": {
     "name": "vben",
     "email": "anncwb@126.com",
@@ -12,6 +33,7 @@
     "dev": "vite",
     "build": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
     "build:test": "cross-env vite build --mode test && esno ./build/script/postBuild.ts",
+    "build:elcproduction": "cross-env vite build --mode elcproduction && esno ./build/script/postBuild.ts",
     "build:no-cache": "pnpm clean:cache && npm run build",
     "report": "cross-env REPORT=true npm run build",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
@@ -29,7 +51,11 @@
     "test:br": "npx http-server dist --cors --brotli -c-1",
     "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf node_modules && npm run bootstrap",
     "prepare": "husky install",
-    "gen:icon": "esno ./build/generate/icon/index.ts"
+    "gen:icon": "esno ./build/generate/icon/index.ts",
+    "electron": "electron .",
+    "electron:dev": "concurrently -k \"cross-env BROWSER=none pnpm electron",
+    "build:for:electron": "cross-env NODE_ENV=production ELECTRON=true pnpm build:elcproduction && esno ./build/script/postBuild.ts",
+    "app:build": "cross-env NODE_ENV=production pnpm build:for:electron && pnpm electron:builder"
   },
   "dependencies": {
     "@ant-design/colors": "^6.0.0",
@@ -37,6 +63,7 @@
     "@iconify/iconify": "^2.1.2",
     "@logicflow/core": "^1.1.7",
     "@logicflow/extension": "^1.1.7",
+    "@types/electron": "^1.6.10",
     "@vue/runtime-core": "^3.2.31",
     "@vue/shared": "^3.2.31",
     "@vueuse/core": "^8.1.1",
@@ -49,6 +76,7 @@
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.0",
     "echarts": "^5.3.1",
+    "esm": "^3.2.25",
     "intro.js": "^5.0.0",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
@@ -97,9 +125,12 @@
     "@vue/test-utils": "^2.0.0-rc.18",
     "autoprefixer": "^10.4.4",
     "commitizen": "^4.2.4",
+    "concurrently": "^7.0.0",
     "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
+    "electron": "^17.2.0",
+    "electron-builder": "^22.14.13",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -141,7 +172,8 @@
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vite-plugin-windicss": "^1.8.3",
     "vue-eslint-parser": "^8.3.0",
-    "vue-tsc": "^0.33.2"
+    "vue-tsc": "^0.33.2",
+    "wait-on": "^6.0.1"
   },
   "resolutions": {
     "bin-wrapper": "npm:bin-wrapper-china",

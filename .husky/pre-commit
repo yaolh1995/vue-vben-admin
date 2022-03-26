@@ -1,8 +1,9 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-. "$(dirname "$0")/common.sh"
+# . "$(dirname "$0")/_/husky.sh"
+# . "$(dirname "$0")/common.sh"
 
-[ -n "$CI" ] && exit 0
+# [ -n "$CI" ] && exit 0
 
 # Format and submit code according to lintstagedrc.js configuration
-npm run lint:lint-staged
+# pnpm run lint:lint-staged
+# lint-staged只能用esm 而 electron不能用esm
